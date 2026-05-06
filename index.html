@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEL | Agricultural Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .animate-spin-slow { animation: spin 8s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        
+        /* Custom Tailwind Color mapping for dynamic status bars */
+        .bg-orange-500 { background-color: #f97316; }
+        .bg-indigo-500 { background-color: #6366f1; }
+        .bg-orange-50 { background-color: #fff7ed; }
+        .bg-indigo-50 { background-color: #eef2ff; }
+        .text-orange-600 { color: #ea580c; }
+        .text-indigo-600 { color: #4f46e5; }
+    </style>
+</head>
+<body class="bg-white">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // Custom Lucide Component Wrapper
+        const Icon = ({ name, size = 24, className = "" }) => {
+            const LucideIcon = lucide.icons[name];
+            if (!LucideIcon) return null;
+            
+            // Render the icon using dangerous inner HTML or similar based on how the CDN works
+            // For simplicity in this demo, we'll map them manually or use the lucide.createIcons method
+            return <i data-lucide={name.toLowerCase()} className={className} style={{ width: size, height: size }}></i>;
+        };
+
+        // Manual Icon Components for speed/stability in CDN environment
+        const Sprout = ({ size = 24, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m7 20 3-3 2 2 3-3 2 2"/><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="15" cy="5" r="2"/></svg>
+        );
+        const ChevronRight = ({ size = 24, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m9 18 6-6-6-6"/></svg>
+        );
+        const Globe = ({ size = 24, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        );
+        const Home = ({ size = 18, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        );
+        const Microscope = ({ size = 18, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 18h8"/><path d="M3 22h18"/><path d="M14 22a7 7 0 1 0-14 0"/><path d="M9 14h2"/><path d="M9 12a2 2 0 1 0-4 0v6h4v-6Z"/><path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3"/><path d="M3 18h18"/></svg>
+        );
+        const Zap = ({ size = 18, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        );
+        const Droplets = ({ size = 18, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M7 16.3c2.2 0 4-1.8 4-4s-4-7-4-7-4 4.8-4 7 1.8 4 4 4Z"/><path d="M17 16.3c2.2 0 4-1.8 4-4s-4-7-4-7-4 4.8-4 7 1.8 4 4 4Z"/></svg>
+        );
+        const BarChart3 = ({ size = 18, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+        );
+        const Truck = ({ size = 18, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><circle cx="7" cy="18" r="2"/><path d="M15 18h5a1 1 0 0 0 1-1v-3.61a1 1 0 0 0-.117-.468l-2.454-4.81A1 1 0 0 0 17.532 8H15"/><circle cx="17" cy="18" r="2"/></svg>
+        );
+        const Bell = ({ size = 20, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        );
+        const Cpu = ({ size = 24, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+        );
+        const Wind = ({ size = 24, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/><path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M12.6 19.4a2 2 0 1 0-1.4-3.4H2"/></svg>
+        );
+        const Factory = ({ size = 24, className = "" }) => (
+            <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M17 18h1"/><path d="M12 18h1"/><path d="M7 18h1"/></svg>
+        );
+
+        // Specialized Animated SVG Components
+        const AnimatedDNA = () => (
+            <div className="flex items-center justify-center w-full h-full group-hover:scale-110 transition-transform duration-500">
+                <svg viewBox="0 0 100 100" className="w-14 h-14">
+                    <path d="M30 20 Q50 50 70 80" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round">
+                        <animate attributeName="d" values="M30 20 Q50 50 70 80; M70 20 Q50 50 30 80; M30 20 Q50 50 70 80" dur="4s" repeatCount="indefinite" />
+                    </path>
+                    <path d="M70 20 Q50 50 30 80" fill="none" stroke="#34D399" strokeWidth="3" strokeLinecap="round">
+                        <animate attributeName="d" values="M70 20 Q50 50 30 80; M30 20 Q50 50 70 80; M70 20 Q50 50 30 80" dur="4s" repeatCount="indefinite" />
+                    </path>
+                    {[25, 40, 55, 70].map((y, i) => (
+                        <line key={i} x1="35" y1={y} x2="65" y2={y} stroke="#059669" strokeWidth="2">
+                            <animate attributeName="opacity" values="0.2;1;0.2" dur="2s" begin={`${i * 0.2}s`} repeatCount="indefinite" />
+                        </line>
+                    ))}
+                </svg>
+            </div>
+        );
+
+        const AnimatedGrowth = () => (
+            <div className="flex items-center justify-center w-full h-full group-hover:scale-110 transition-transform duration-500">
+                <svg viewBox="0 0 100 100" className="w-14 h-14">
+                    <path d="M50 80 V40" fill="none" stroke="#10B981" strokeWidth="4" strokeLinecap="round">
+                        <animate attributeName="stroke-dasharray" values="0,40;40,0" dur="2s" repeatCount="indefinite" />
+                    </path>
+                    <path d="M50 55 L30 45" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round">
+                        <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" />
+                    </path>
+                    <path d="M50 45 L70 35" fill="none" stroke="#10B981" strokeWidth="3" strokeLinecap="round">
+                        <animate attributeName="opacity" values="0;1;0" dur="2s" begin="0.5s" repeatCount="indefinite" />
+                    </path>
+                    <circle cx="50" cy="30" r="5" fill="#34D399">
+                        <animate attributeName="r" values="3;6;3" dur="1.5s" repeatCount="indefinite" />
+                    </circle>
+                </svg>
+            </div>
+        );
+
+        const AnimatedSensor = () => (
+            <div className="flex items-center justify-center w-full h-full group-hover:scale-110 transition-transform duration-500">
+                <svg viewBox="0 0 100 100" className="w-14 h-14">
+                    <circle cx="50" cy="50" r="35" fill="none" stroke="#3B82F6" strokeWidth="1" strokeDasharray="4 4" opacity="0.3">
+                        <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="15s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="50" cy="50" r="25" fill="none" stroke="#3B82F6" strokeWidth="1" strokeDasharray="2 6">
+                        <animateTransform attributeName="transform" type="rotate" from="360 50 50" to="0 50 50" dur="10s" repeatCount="indefinite" />
+                    </circle>
+                    <rect x="42" y="42" width="16" height="16" rx="4" fill="#3B82F6">
+                        <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" />
+                    </rect>
+                    <path d="M50 15 V25 M50 75 V85 M15 50 H25 M75 50 H85" stroke="#3B82F6" strokeWidth="2" strokeLinecap="round">
+                        <animate attributeName="stroke-dashoffset" values="0;10" dur="1s" repeatCount="indefinite" />
+                    </path>
+                </svg>
+            </div>
+        );
+
+        const App = () => {
+            const [view, setView] = useState('landing');
+            const [scrolled, setScrolled] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const Navigation = () => (
+                <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled || view === 'portal' ? 'bg-white/90 backdrop-blur-md shadow-sm border-b border-emerald-100' : 'bg-transparent'}`}>
+                    <div className="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
+                        <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setView('landing')}>
+                            <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200">
+                                <Sprout className="text-white w-6 h-6" />
+                            </div>
+                            <span className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-emerald-700 to-teal-600 tracking-tight">KEL</span>
+                        </div>
+
+                        <div className="hidden md:flex items-center space-x-8">
+                            <a href="#" className="text-gray-600 hover:text-emerald-600 font-medium transition-colors">Zones</a>
+                            <a href="#" className="text-gray-600 hover:text-emerald-600 font-medium transition-colors">AI Agents</a>
+                            {view === 'landing' ? (
+                                <button 
+                                    onClick={() => setView('portal')}
+                                    className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-full font-bold transition-all shadow-md hover:shadow-emerald-200 flex items-center space-x-2"
+                                >
+                                    <span>Agricultural Portal</span>
+                                    <ChevronRight size={18} />
+                                </button>
+                            ) : (
+                                <div className="flex items-center space-x-4">
+                                    <Bell className="text-gray-400 cursor-pointer hover:text-emerald-600 transition-colors" size={20} />
+                                    <div className="w-10 h-10 rounded-full bg-emerald-100 border-2 border-white shadow-sm flex items-center justify-center text-emerald-700 font-bold">SM</div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </nav>
+            );
+
+            const LandingPage = () => (
+                <div className="pt-20">
+                    <section className="relative pt-16 pb-32 overflow-hidden">
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] bg-gradient-to-b from-emerald-50/50 to-transparent -z-10 blur-3xl opacity-60" />
+                        <div className="max-w-7xl mx-auto px-4 text-center">
+                            <div className="inline-flex items-center space-x-2 bg-emerald-50 text-emerald-700 px-4 py-1.5 rounded-full text-xs font-black mb-6 border border-emerald-100 tracking-widest uppercase">
+                                <Globe size={14} className="animate-spin-slow" />
+                                <span>Sustainable Food Security • Africa</span>
+                            </div>
+                            <h1 className="text-5xl lg:text-7xl font-extrabold text-gray-900 mb-8 leading-tight tracking-tight">
+                                Knowledge-Driven <br />
+                                <span className="text-emerald-600">Agricultural Intelligence.</span>
+                            </h1>
+                            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-12">
+                                KEL is an autonomous, AI-governed production system leveraging genetic enhancement and full-cycle automation to secure the future of nutrition.
+                            </p>
+                            <div className="flex flex-col sm:flex-row justify-center gap-4">
+                                <button onClick={() => setView('portal')} className="px-10 py-4 bg-emerald-600 text-white rounded-2xl font-bold text-lg hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-100">
+                                    Enter Operations Center
+                                </button>
+                                <button className="px-10 py-4 bg-white text-gray-700 border border-gray-200 rounded-2xl font-bold text-lg hover:border-emerald-400 transition-all">
+                                    Sustainability Report
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section className="max-w-7xl mx-auto px-4 pb-24">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {[
+                                { component: AnimatedDNA, title: "Genetic Enhancement", desc: "Bioengineering high-nutrition, climate-resilient superfoods.", color: "emerald" },
+                                { component: AnimatedGrowth, title: "Autonomous Growth", desc: "Managing every stage from seed to harvest without human intervention.", color: "emerald" },
+                                { component: AnimatedSensor, title: "Ecological Intelligence", desc: "Precision resource management and real-time soil health monitoring.", color: "blue" }
+                            ].map((f, i) => (
+                                <div key={i} className="bg-white/60 backdrop-blur-md border border-white p-10 rounded-[2.5rem] shadow-sm hover:shadow-xl transition-all group flex flex-col items-center text-center">
+                                    <div className={`w-24 h-24 bg-${f.color}-50 rounded-3xl mb-8 flex items-center justify-center transition-colors group-hover:bg-${f.color}-100/80`}>
+                                        <f.component />
+                                    </div>
+                                    <h3 className="text-2xl font-bold mb-4 text-gray-900">{f.title}</h3>
+                                    <p className="text-gray-600 leading-relaxed">{f.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                </div>
+            );
+
+            const VirtualPortal = () => (
+                <div className="pt-20 bg-gray-50 min-h-screen">
+                    <div className="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <aside className="lg:col-span-3 space-y-4">
+                            <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+                                <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-6 px-4">System Management</h4>
+                                <nav className="space-y-1">
+                                    {[
+                                        { icon: Home, label: "Zone Overview", active: true },
+                                        { icon: Microscope, label: "Bio-Lab" },
+                                        { icon: Zap, label: "Energy Grid" },
+                                        { icon: Droplets, label: "Hydration" },
+                                        { icon: BarChart3, label: "Yield Data" },
+                                        { icon: Truck, label: "Logistics" }
+                                    ].map((item, i) => (
+                                        <button key={i} className={`w-full flex items-center space-x-3 px-4 py-3.5 rounded-2xl transition-all ${item.active ? 'bg-emerald-50 text-emerald-700 font-bold' : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'}`}>
+                                            <item.icon size={18} />
+                                            <span className="text-sm font-semibold">{item.label}</span>
+                                        </button>
+                                    ))}
+                                </nav>
+                            </div>
+
+                            <div className="bg-emerald-900 rounded-3xl p-7 text-white overflow-hidden relative shadow-lg shadow-emerald-900/20">
+                                <div className="absolute top-0 right-0 p-4 opacity-10 translate-x-4 -translate-y-4">
+                                    <Sprout size={120} />
+                                </div>
+                                <h5 className="font-bold text-lg mb-2 relative z-10">Net Zero Status</h5>
+                                <p className="text-xs text-emerald-100/70 mb-5 leading-relaxed relative z-10">All zones operating on 100% renewable mesh-grid.</p>
+                                <div className="h-2 w-full bg-emerald-800/50 rounded-full relative z-10 overflow-hidden">
+                                    <div className="h-full bg-emerald-400 rounded-full w-[94%] shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
+                                </div>
+                            </div>
+                        </aside>
+
+                        <main className="lg:col-span-9 space-y-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                                {[
+                                    { label: "Total Yield", value: "2,847 kg", change: "+4.2%", icon: Sprout, color: "emerald" },
+                                    { label: "Efficiency", value: "98.2%", change: "Stable", icon: Cpu, color: "blue" },
+                                    { label: "H2O Savings", value: "450k L", change: "+12%", icon: Droplets, color: "teal" }
+                                ].map((stat, i) => (
+                                    <div key={i} className="bg-white p-7 rounded-[2rem] border border-gray-100 shadow-sm flex items-center justify-between hover:border-emerald-200 transition-colors">
+                                        <div>
+                                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">{stat.label}</p>
+                                            <h4 className="text-3xl font-black text-gray-900">{stat.value}</h4>
+                                            <span className={`text-xs font-bold ${stat.change.includes('+') ? 'text-emerald-600' : 'text-gray-400'}`}>{stat.change}</span>
+                                        </div>
+                                        <div className={`w-14 h-14 bg-${stat.color}-50 text-${stat.color}-600 rounded-2xl flex items-center justify-center`}>
+                                            <stat.icon size={28} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="space-y-6">
+                                <div className="flex items-center justify-between px-2">
+                                    <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Zone Operational Status</h3>
+                                    <div className="px-4 py-1.5 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-full uppercase tracking-widest border border-emerald-100">
+                                        All Systems Nominal
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {[
+                                        { zone: "Laboratory Zone", status: "Researching", load: 88, icon: Microscope, color: "emerald" },
+                                        { zone: "Greenhouse Alpha", status: "Growth Phase", load: 94, icon: Wind, color: "blue" },
+                                        { zone: "Processing House", status: "Standby", load: 12, icon: Factory, color: "orange" },
+                                        { zone: "Logistics Hub", status: "Active", load: 65, icon: Truck, color: "indigo" }
+                                    ].map((z, i) => (
+                                        <div key={i} className="bg-white border border-gray-100 rounded-[2.5rem] p-7 hover:shadow-xl hover:-translate-y-1 transition-all group cursor-pointer relative overflow-hidden">
+                                            <div className={`absolute top-0 right-0 w-32 h-32 bg-${z.color}-50/30 rounded-full translate-x-16 -translate-y-16 -z-0`} />
+                                            
+                                            <div className="flex justify-between items-start mb-8 relative z-10">
+                                                <div className="flex items-center space-x-5">
+                                                    <div className={`w-14 h-14 bg-${z.color}-50 text-${z.color}-600 rounded-2xl flex items-center justify-center transition-all group-hover:shadow-lg`}>
+                                                        <z.icon size={28} />
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="text-xl font-black text-gray-900 leading-tight tracking-tight">{z.zone}</h4>
+                                                        <p className="text-sm text-gray-400 font-medium">{z.status}</p>
+                                                    </div>
+                                                </div>
+                                                <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse" />
+                                            </div>
+
+                                            <div className="relative z-10">
+                                                <div className="flex justify-between text-[11px] font-black text-gray-400 uppercase tracking-widest mb-3">
+                                                    <span>System Load</span>
+                                                    <span className={`text-${z.color}-600`}>{z.load}%</span>
+                                                </div>
+                                                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                                                    <div 
+                                                        className={`h-full bg-${z.color}-500 rounded-full transition-all duration-1000 ease-out`} 
+                                                        style={{ width: `${z.load}%` }} 
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="min-h-screen bg-white font-sans text-gray-900 antialiased selection:bg-emerald-100">
+                    <Navigation />
+                    
+                    {view === 'landing' ? <LandingPage /> : <VirtualPortal />}
+
+                    <footer className="py-16 border-t border-gray-100 mt-12 bg-gray-50">
+                        <div className="max-w-7xl mx-auto px-4 flex flex-col items-center">
+                            <div className="flex items-center space-x-2 mb-6">
+                                <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200">
+                                    <Sprout className="text-white w-5 h-5" />
+                                </div>
+                                <span className="font-black text-2xl tracking-tighter bg-clip-text text-transparent bg-gradient-to-br from-emerald-800 to-teal-600">KEL SYSTEM</span>
+                            </div>
+                            <p className="text-gray-400 text-sm mb-8 font-medium">© 2026 Sans Mercantile Constellation. Ecological Intelligence Unit.</p>
+                            <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-xs font-bold text-gray-500 uppercase tracking-widest">
+                                <a href="#" className="hover:text-emerald-600 transition-colors">Ethics Protocol</a>
+                                <a href="#" className="hover:text-emerald-600 transition-colors">Traceability</a>
+                                <a href="#" className="hover:text-emerald-600 transition-colors">Network Status</a>
+                                <a href="#" className="hover:text-emerald-600 transition-colors">Governance</a>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
