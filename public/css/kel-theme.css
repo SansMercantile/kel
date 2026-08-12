@@ -1,0 +1,423 @@
+/* KEL Agricultural System Theme */
+/* Knowledge-Driven Cultivation | Ecological Intelligence | Logistics Optimization */
+
+:root {
+    /* Agricultural Color Palette */
+    --kel-primary: #2E7D32;        /* Deep Green - Primary agricultural */
+    --kel-secondary: #4CAF50;       /* Fresh Green - Secondary agricultural */
+    --kel-accent: #8BC34A;          /* Light Green - Accent */
+    --kel-earth: #795548;           /* Earth Brown - Soil/ground */
+    --kel-sky: #2196F3;             /* Sky Blue - Weather/water */
+    --kel-sun: #FFC107;             /* Golden Yellow - Sunlight/harvest */
+    --kel-harvest: #FF9800;         /* Orange - Harvest season */
+    --kel-growth: #66BB6A;          /* Growth Green - Plant development */
+    
+    /* Neutral Colors */
+    --kel-dark: #1B5E20;            /* Dark Green - Text/headers */
+    --kel-light: #E8F5E9;           /* Light Green - Backgrounds */
+    --kel-white: #FFFFFF;           /* Pure White - Cards/containers */
+    --kel-gray: #757575;            /* Medium Gray - Secondary text */
+    --kel-gray-light: #F5F5F5;      /* Light Gray - Subtle backgrounds */
+    
+    /* Status Colors */
+    --kel-success: #4CAF50;         /* Success - Healthy crops */
+    --kel-warning: #FF9800;         /* Warning - Attention needed */
+    --kel-error: #F44336;           /* Error - Issues/problems */
+    --kel-info: #2196F3;            /* Info - Informational */
+    
+    /* Typography */
+    --kel-font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --kel-font-mono: 'Courier New', monospace;
+    --kel-font-size-xs: 0.75rem;
+    --kel-font-size-sm: 0.875rem;
+    --kel-font-size-base: 1rem;
+    --kel-font-size-lg: 1.125rem;
+    --kel-font-size-xl: 1.25rem;
+    --kel-font-size-2xl: 1.5rem;
+    --kel-font-size-3xl: 1.875rem;
+    --kel-font-size-4xl: 2.25rem;
+    
+    /* Spacing */
+    --kel-spacing-xs: 0.25rem;
+    --kel-spacing-sm: 0.5rem;
+    --kel-spacing-md: 1rem;
+    --kel-spacing-lg: 1.5rem;
+    --kel-spacing-xl: 2rem;
+    --kel-spacing-2xl: 3rem;
+    
+    /* Border Radius */
+    --kel-radius-sm: 0.25rem;
+    --kel-radius-md: 0.5rem;
+    --kel-radius-lg: 0.75rem;
+    --kel-radius-xl: 1rem;
+    
+    /* Shadows */
+    --kel-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --kel-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --kel-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --kel-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--kel-font-primary);
+    background: linear-gradient(135deg, var(--kel-light) 0%, var(--kel-white) 100%);
+    color: var(--kel-dark);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Header Styles */
+.kel-header {
+    background: linear-gradient(135deg, var(--kel-primary) 0%, var(--kel-secondary) 100%);
+    color: white;
+    padding: var(--kel-spacing-xl) 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.kel-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+    opacity: 0.3;
+}
+
+.kel-header-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--kel-spacing-lg);
+}
+
+.kel-logo {
+    font-size: var(--kel-font-size-4xl);
+    font-weight: bold;
+    margin-bottom: var(--kel-spacing-md);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.kel-subtitle {
+    font-size: var(--kel-font-size-xl);
+    opacity: 0.9;
+    margin-bottom: var(--kel-spacing-lg);
+}
+
+.kel-tagline {
+    font-size: var(--kel-font-size-lg);
+    opacity: 0.8;
+    font-style: italic;
+}
+
+/* Navigation */
+.kel-nav {
+    background: var(--kel-white);
+    box-shadow: var(--kel-shadow-md);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.kel-nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--kel-spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.kel-nav-menu {
+    display: flex;
+    list-style: none;
+    gap: var(--kel-spacing-xl);
+}
+
+.kel-nav-link {
+    color: var(--kel-dark);
+    text-decoration: none;
+    padding: var(--kel-spacing-md) var(--kel-spacing-lg);
+    border-radius: var(--kel-radius-md);
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.kel-nav-link:hover {
+    background: var(--kel-light);
+    color: var(--kel-primary);
+    transform: translateY(-2px);
+}
+
+/* Main Content */
+.kel-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--kel-spacing-2xl) var(--kel-spacing-lg);
+}
+
+/* Cards */
+.kel-card {
+    background: var(--kel-white);
+    border-radius: var(--kel-radius-xl);
+    padding: var(--kel-spacing-xl);
+    box-shadow: var(--kel-shadow-lg);
+    margin-bottom: var(--kel-spacing-xl);
+    transition: all 0.3s ease;
+    border: 1px solid var(--kel-light);
+}
+
+.kel-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--kel-shadow-xl);
+}
+
+.kel-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--kel-spacing-lg);
+}
+
+.kel-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--kel-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--kel-spacing-md);
+    font-size: var(--kel-font-size-xl);
+}
+
+.kel-card-title {
+    font-size: var(--kel-font-size-2xl);
+    color: var(--kel-dark);
+    margin: 0;
+}
+
+.kel-card-subtitle {
+    color: var(--kel-gray);
+    font-size: var(--kel-font-size-base);
+    margin-top: var(--kel-spacing-xs);
+}
+
+/* Zone Cards with specific colors */
+.kel-zone-lab { background: linear-gradient(135deg, var(--kel-sky) 0%, var(--kel-info) 100%); }
+.kel-zone-greenhouse { background: linear-gradient(135deg, var(--kel-growth) 0%, var(--kel-accent) 100%); }
+.kel-zone-harvest { background: linear-gradient(135deg, var(--kel-harvest) 0%, var(--kel-warning) 100%); }
+.kel-zone-processing { background: linear-gradient(135deg, var(--kel-earth) 0%, #8D6E63 100%); }
+.kel-zone-factory { background: linear-gradient(135deg, var(--kel-gray) 0%, #616161 100%); }
+.kel-zone-storage { background: linear-gradient(135deg, var(--kel-secondary) 0%, var(--kel-success) 100%); }
+
+/* Grid Layouts */
+.kel-grid {
+    display: grid;
+    gap: var(--kel-spacing-xl);
+}
+
+.kel-grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.kel-grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+.kel-grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+/* Buttons */
+.kel-btn {
+    display: inline-block;
+    padding: var(--kel-spacing-md) var(--kel-spacing-lg);
+    border: none;
+    border-radius: var(--kel-radius-md);
+    font-size: var(--kel-font-size-base);
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.kel-btn-primary {
+    background: var(--kel-primary);
+    color: white;
+}
+
+.kel-btn-primary:hover {
+    background: var(--kel-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--kel-shadow-md);
+}
+
+.kel-btn-secondary {
+    background: var(--kel-secondary);
+    color: white;
+}
+
+.kel-btn-accent {
+    background: var(--kel-accent);
+    color: var(--kel-dark);
+}
+
+/* Dashboard Styles */
+.kel-dashboard {
+    background: var(--kel-white);
+    border-radius: var(--kel-radius-xl);
+    padding: var(--kel-spacing-xl);
+    box-shadow: var(--kel-shadow-lg);
+    margin-bottom: var(--kel-spacing-xl);
+}
+
+.kel-metric {
+    text-align: center;
+    padding: var(--kel-spacing-lg);
+    border-radius: var(--kel-radius-lg);
+    background: var(--kel-light);
+}
+
+.kel-metric-value {
+    font-size: var(--kel-font-size-3xl);
+    font-weight: bold;
+    color: var(--kel-primary);
+    display: block;
+}
+
+.kel-metric-label {
+    color: var(--kel-gray);
+    font-size: var(--kel-font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Agent Visualization */
+.kel-agent-node {
+    background: var(--kel-white);
+    border: 2px solid var(--kel-secondary);
+    border-radius: var(--kel-radius-lg);
+    padding: var(--kel-spacing-md);
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.kel-agent-node:hover {
+    border-color: var(--kel-primary);
+    box-shadow: var(--kel-shadow-md);
+    transform: scale(1.05);
+}
+
+.kel-agent-status {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: var(--kel-spacing-xs);
+}
+
+.kel-status-active { background: var(--kel-success); }
+.kel-status-idle { background: var(--kel-warning); }
+.kel-status-offline { background: var(--kel-error); }
+
+/* Progress Bars */
+.kel-progress {
+    background: var(--kel-gray-light);
+    border-radius: var(--kel-radius-sm);
+    overflow: hidden;
+    height: 8px;
+    margin: var(--kel-spacing-sm) 0;
+}
+
+.kel-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--kel-primary) 0%, var(--kel-secondary) 100%);
+    transition: width 0.3s ease;
+}
+
+/* Forms and Inputs */
+.kel-form-group {
+    margin-bottom: var(--kel-spacing-lg);
+}
+
+.kel-form-label {
+    display: block;
+    margin-bottom: var(--kel-spacing-sm);
+    font-weight: 500;
+    color: var(--kel-dark);
+}
+
+.kel-form-control {
+    width: 100%;
+    padding: var(--kel-spacing-md);
+    border: 2px solid var(--kel-light);
+    border-radius: var(--kel-radius-md);
+    font-size: var(--kel-font-size-base);
+    transition: border-color 0.3s ease;
+}
+
+.kel-form-control:focus {
+    outline: none;
+    border-color: var(--kel-primary);
+}
+
+/* Footer */
+.kel-footer {
+    background: var(--kel-dark);
+    color: white;
+    padding: var(--kel-spacing-2xl) 0;
+    text-align: center;
+    margin-top: var(--kel-spacing-2xl);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .kel-nav-menu {
+        flex-direction: column;
+        gap: var(--kel-spacing-md);
+    }
+    
+    .kel-grid-2, .kel-grid-3, .kel-grid-4 {
+        grid-template-columns: 1fr;
+    }
+    
+    .kel-header {
+        padding: var(--kel-spacing-lg) 0;
+    }
+    
+    .kel-logo {
+        font-size: var(--kel-font-size-3xl);
+    }
+}
+
+/* Animations */
+@keyframes kel-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.kel-animated {
+    animation: kel-pulse 2s infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--kel-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--kel-primary);
+    border-radius: var(--kel-radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--kel-dark);
+}
