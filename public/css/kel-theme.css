@@ -421,3 +421,39 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--kel-dark);
 }
+
+/* Ported from js/kel-agricultural.js's runtime-injected modalCSS string, moved into
+   the real stylesheet since the React port uses conditional rendering instead of
+   dynamic style injection for the agent-detail modal. */
+.kel-modal {
+    display: flex;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    align-items: center;
+    justify-content: center;
+}
+.kel-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+}
+.kel-modal-close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+.kel-modal-close:hover {
+    color: #333;
+}
+
